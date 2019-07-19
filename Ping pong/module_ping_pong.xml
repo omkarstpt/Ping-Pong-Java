@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ping_pong" default="compile.module.ping_pong">
+  <dirname property="module.ping_pong.basedir" file="${ant.file.module_ping_pong}"/>
+  
+  <property name="module.jdk.home.ping_pong" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ping_pong" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ping_pong" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ping_pong" value="-encoding UTF-8 -source 1.5 -target 1.5 ${compiler.args}"/>
+  
+  <property name="ping_pong.output.dir" value="${module.ping_pong.basedir}/target/classes"/>
+  <property name="ping_pong.testoutput.dir" value="${module.ping_pong.basedir}/target/test-classes"/>
+  
+  <path id="ping_pong.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ping_pong.module.production.classpath">
+    <path refid="${module.jdk.classpath.ping_pong}"/>
+  </path>
+  
+  <path id="ping_pong.runtime.production.module.classpath">
+    <pathelement location="${ping_pong.output.dir}"/>
+  </path>
+  
+  <path id="ping_pong.module.classpath">
+    <path refid="${module.jdk.classpath.ping_pong}"/>
+    <pathelement location="${ping_pong.output.dir}"/>
+  </path>
+  
+  <path id="ping_pong.runtime.module.classpath">
+    <pathelement location="${ping_pong.testoutput.dir}"/>
+    <pathelement location="${ping_pong.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ping_pong">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ping_pong">
+    <patternset refid="excluded.from.module.ping_pong"/>
+  </patternset>
+  
+  <path id="ping_pong.module.sourcepath">
+    <dirset dir="${module.ping_pong.basedir}">
+      <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+    </dirset>
+  </path>
+  
+  <path id="ping_pong.module.test.sourcepath">
+    <dirset dir="${module.ping_pong.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ping_pong" depends="compile.module.ping_pong.production,compile.module.ping_pong.tests" description="Compile module Ping pong"/>
+  
+  <target name="compile.module.ping_pong.production" depends="register.custom.compilers" description="Compile module Ping pong; production classes">
+    <mkdir dir="${ping_pong.output.dir}"/>
+    <javac2 destdir="${ping_pong.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ping_pong}/javac">
+      <compilerarg line="${compiler.args.ping_pong}"/>
+      <bootclasspath refid="ping_pong.module.bootclasspath"/>
+      <classpath refid="ping_pong.module.production.classpath"/>
+      <src refid="ping_pong.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ping_pong"/>
+    </javac2>
+    
+    <copy todir="${ping_pong.output.dir}">
+      <fileset dir="${module.ping_pong.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.ping_pong.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ping_pong.tests" depends="register.custom.compilers,compile.module.ping_pong.production" description="compile module Ping pong; test classes" unless="skip.tests">
+    <mkdir dir="${ping_pong.testoutput.dir}"/>
+    <javac2 destdir="${ping_pong.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ping_pong}/javac">
+      <compilerarg line="${compiler.args.ping_pong}"/>
+      <bootclasspath refid="ping_pong.module.bootclasspath"/>
+      <classpath refid="ping_pong.module.classpath"/>
+      <src refid="ping_pong.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ping_pong"/>
+    </javac2>
+    
+    <copy todir="${ping_pong.testoutput.dir}">
+      <fileset dir="${module.ping_pong.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.ping_pong" description="cleanup module">
+    <delete dir="${ping_pong.output.dir}"/>
+    <delete dir="${ping_pong.testoutput.dir}"/>
+  </target>
+</project>

@@ -1,0 +1,147 @@
+<html>
+<head>
+<title>PongGame.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(128,128,128); font-style: italic; }
+.s3 { color: rgb(0,0,255); }
+.s4 { color: rgb(0,128,0); font-weight: bold; }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+PongGame.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">import </span><span class="s1">javax.swing.*; 
+</span><span class="s0">import </span><span class="s1">java.awt.*; 
+</span><span class="s0">import </span><span class="s1">java.awt.event.*; 
+ 
+</span><span class="s2">/** 
+ * Created by HP on 14-Nov-15. 
+ */</span><span class="s1"> 
+</span><span class="s0">public class </span><span class="s1">PongGame </span><span class="s0">extends </span><span class="s1">JComponent </span><span class="s0">implements </span><span class="s1">ActionListener,MouseMotionListener, KeyListener { 
+    </span><span class="s0">private int </span><span class="s1">ballX=</span><span class="s3">400</span><span class="s1">; 
+    </span><span class="s0">private int </span><span class="s1">ballY=</span><span class="s3">150</span><span class="s1">; 
+    </span><span class="s0">private int </span><span class="s1">paddleY=</span><span class="s3">0</span><span class="s1">; 
+    </span><span class="s0">private int </span><span class="s1">ballYSpeed = </span><span class="s3">5</span><span class="s1">; 
+    </span><span class="s0">private int </span><span class="s1">ballXSpeed = </span><span class="s3">5</span><span class="s1">; 
+    </span><span class="s0">private int </span><span class="s1">paddleY2 = </span><span class="s3">0</span><span class="s1">; 
+    </span><span class="s0">private int </span><span class="s1">paddleY2Speed=</span><span class="s3">0</span><span class="s1">; 
+ 
+    </span><span class="s0">public static void </span><span class="s1">main(String[] args){ 
+       JFrame window = </span><span class="s0">new </span><span class="s1">JFrame(</span><span class="s4">&quot;Ping Pong&quot;</span><span class="s1">); 
+       PongGame game = </span><span class="s0">new </span><span class="s1">PongGame(); 
+       window.add(game); 
+       window.pack(); 
+       window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); 
+       window.setLocationRelativeTo(</span><span class="s0">null</span><span class="s1">); 
+       window.setVisible(</span><span class="s0">true</span><span class="s1">); 
+ 
+ 
+       Timer t = </span><span class="s0">new </span><span class="s1">Timer(</span><span class="s3">15</span><span class="s1">, game); 
+       t.start(); 
+ 
+       window.addMouseMotionListener(game); 
+       window.addKeyListener(game); 
+       window.setFocusable(</span><span class="s0">true</span><span class="s1">); 
+   } 
+    </span><span class="s0">public </span><span class="s1">Dimension getPreferredSize(){ 
+        </span><span class="s0">return new </span><span class="s1">Dimension(</span><span class="s3">800</span><span class="s1">,</span><span class="s3">600</span><span class="s1">); 
+    } 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">paintComponent(Graphics g) { 
+        g.setColor(Color.BLACK); 
+        g.fillRect(</span><span class="s3">0</span><span class="s1">,</span><span class="s3">0</span><span class="s1">,</span><span class="s3">800</span><span class="s1">,</span><span class="s3">600</span><span class="s1">);</span><span class="s2">//Backgroung</span><span class="s1"> 
+ 
+        g.setColor(Color.BLUE);</span><span class="s2">//Paddle</span><span class="s1"> 
+        g.fillRect(</span><span class="s3">780</span><span class="s1">,paddleY,</span><span class="s3">15</span><span class="s1">,</span><span class="s3">150</span><span class="s1">); 
+        g.setColor(</span><span class="s0">new </span><span class="s1">Color(</span><span class="s3">186</span><span class="s1">,</span><span class="s3">0</span><span class="s1">, </span><span class="s3">9</span><span class="s1">)); 
+        g.fillRect(</span><span class="s3">10</span><span class="s1">,paddleY2,</span><span class="s3">15</span><span class="s1">,</span><span class="s3">150</span><span class="s1">); 
+ 
+        g.setColor(</span><span class="s0">new </span><span class="s1">Color(</span><span class="s3">255</span><span class="s1">, </span><span class="s3">252</span><span class="s1">, </span><span class="s3">249</span><span class="s1">));</span><span class="s2">//Ball</span><span class="s1"> 
+        g.fillOval(ballX,ballY,</span><span class="s3">15</span><span class="s1">,</span><span class="s3">15</span><span class="s1">); 
+        </span><span class="s0">if</span><span class="s1">(ballX &lt;</span><span class="s3">0</span><span class="s1">){ 
+            g.drawString(</span><span class="s4">&quot;Player 2 wins &quot;</span><span class="s1">, </span><span class="s3">380</span><span class="s1">,</span><span class="s3">100</span><span class="s1">); 
+        } 
+        </span><span class="s0">if</span><span class="s1">(ballX &gt;</span><span class="s3">800</span><span class="s1">){ 
+            g.drawString(</span><span class="s4">&quot;Player 1 wins &quot;</span><span class="s1">, </span><span class="s3">380</span><span class="s1">,</span><span class="s3">100</span><span class="s1">); 
+        } 
+ 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">actionPerformed(ActionEvent e) { 
+        ballX = ballX + ballXSpeed; 
+        ballY = ballY + ballYSpeed; 
+        paddleY2 = paddleY2 + paddleY2Speed; 
+        </span><span class="s0">if </span><span class="s1">(ballY + </span><span class="s3">15 </span><span class="s1">&gt;= paddleY &amp;&amp; ballY &lt;= paddleY +</span><span class="s3">150 </span><span class="s1">&amp;&amp; ballX +</span><span class="s3">15 </span><span class="s1">&gt;= </span><span class="s3">780 </span><span class="s1">&amp;&amp; ballX &lt;=</span><span class="s3">780</span><span class="s1">+</span><span class="s3">15</span><span class="s1">){ 
+            ballXSpeed = -</span><span class="s3">5</span><span class="s1">; 
+        } 
+        </span><span class="s0">if </span><span class="s1">(ballY &lt;= </span><span class="s3">0</span><span class="s1">){ 
+            ballYSpeed = </span><span class="s3">5</span><span class="s1">; 
+        } 
+        </span><span class="s0">if</span><span class="s1">(ballY&gt;=</span><span class="s3">600</span><span class="s1">-</span><span class="s3">15</span><span class="s1">){ 
+            ballYSpeed = -</span><span class="s3">5</span><span class="s1">; 
+        } 
+        </span><span class="s0">if </span><span class="s1">(paddleY&lt;</span><span class="s3">0</span><span class="s1">){ 
+            paddleY=</span><span class="s3">0</span><span class="s1">; 
+        } 
+        </span><span class="s0">if </span><span class="s1">(paddleY&gt;</span><span class="s3">600</span><span class="s1">-</span><span class="s3">150</span><span class="s1">){ 
+            paddleY=</span><span class="s3">600</span><span class="s1">-</span><span class="s3">150</span><span class="s1">; 
+        } 
+        </span><span class="s0">if </span><span class="s1">(paddleY2&lt;</span><span class="s3">0</span><span class="s1">){ 
+            paddleY2=</span><span class="s3">0</span><span class="s1">; 
+        } 
+        </span><span class="s0">if </span><span class="s1">(paddleY2&gt;</span><span class="s3">600</span><span class="s1">-</span><span class="s3">150</span><span class="s1">){ 
+            paddleY2=</span><span class="s3">600</span><span class="s1">-</span><span class="s3">150</span><span class="s1">; 
+        } 
+        </span><span class="s0">if </span><span class="s1">(ballY + </span><span class="s3">15 </span><span class="s1">&gt;= paddleY2 &amp;&amp; ballY &lt;= paddleY2 +</span><span class="s3">150 </span><span class="s1">&amp;&amp; ballX +</span><span class="s3">15 </span><span class="s1">&gt;= </span><span class="s3">10 </span><span class="s1">&amp;&amp; ballX &lt;=</span><span class="s3">10</span><span class="s1">+</span><span class="s3">15</span><span class="s1">){ 
+            ballXSpeed = </span><span class="s3">5</span><span class="s1">; 
+        } 
+ 
+ 
+        repaint(); 
+ 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">mouseDragged(MouseEvent e) { 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">mouseMoved(MouseEvent e) { 
+        paddleY = e.getY() - </span><span class="s3">75</span><span class="s1">; 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">keyTyped(KeyEvent e) { 
+ 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">keyPressed(KeyEvent e) { 
+        </span><span class="s0">int </span><span class="s1">c = e.getKeyCode(); 
+ 
+        </span><span class="s0">if</span><span class="s1">(c== KeyEvent.VK_W){ 
+            paddleY2Speed =-</span><span class="s3">10</span><span class="s1">; 
+        } 
+        </span><span class="s0">if</span><span class="s1">(c== KeyEvent.VK_S){ 
+            paddleY2Speed=</span><span class="s3">10</span><span class="s1">; 
+        } 
+    } 
+ 
+    @Override 
+    </span><span class="s0">public void </span><span class="s1">keyReleased(KeyEvent e) { 
+        paddleY2Speed=</span><span class="s3">0</span><span class="s1">; 
+    } 
+} 
+</span></pre>
+</body>
+</html>
